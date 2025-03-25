@@ -2,7 +2,19 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align = 'center'> Notes</h1>
+<h1 align = 'center'> Money Tracker</h1>
+<form method="POST", action="/submit">
+    <label for="Categories">Categories:</label>
+    <select name="category">
+        <option value=""></option>
+    </select>
+</form>
+
+
+
+
+
+<!-- <form method="POST"></form>
 <ul class="list-group list list-group-flush" id = 'notes'>
     {% for note in user.notes%}
     <li class="list-group-item">{{note.data}}
@@ -18,5 +30,5 @@
     <div align="center">
         <button type="submit" class="btn btn-primary"> Add Note </button>
     </div>
-</form>
+</form> -->
 {% endblock %}
