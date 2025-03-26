@@ -2,33 +2,50 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align = 'center'> Money Tracker</h1>
-<form method="POST", action="/submit">
-    <label for="Categories">Categories:</label>
-    <select name="category">
-        <option value=""></option>
-    </select>
-</form>
-
-
-
-
-
-<!-- <form method="POST"></form>
-<ul class="list-group list list-group-flush" id = 'notes'>
-    {% for note in user.notes%}
-    <li class="list-group-item">{{note.data}}
-        <button type="button" class="close" onclick="deleteNote('{{note.id}}')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </li>
-    {% endfor %}
-</ul>
-<form method="POST">
-    <textarea name="note" id="note" class="form-control"></textarea>
-    <br />
-    <div align="center">
-        <button type="submit" class="btn btn-primary"> Add Note </button>
+<h1 align="center">Money Tracker</h1>
+<form method="POST" action="/">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" name="category">
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Clothes">Clothes</option>
+        </select>
     </div>
-</form> -->
+    <div class="form-group">
+        <label>Amount</label>
+        <input type="number" name="amount" step="0.01">
+    </div>
+    <button type="submit" class="btn btn-primary">ADD</button>
+    <h3 class="mt-4">Total amount of this month: {{"{:,.0f}VND".format(total)}}</h3>
+
+    <!-- Hiển thị danh sách chi tiêu -->
+    <ul class="mt-3">
+        {% for expense in user.expenses %}
+        <li class="list-group-item">
+            {{expense.category}} : {{"{:,.0f}VND".format(expense.amount)}}
+            <small class="text-muted">({{expense.timestamp.strftime('%d/%m/%Y %H:%M')}})</small>
+            <button class="close" onclick="deleteExpense('{{expense.id}}')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <!-- Script xóa chi tiêu -->
+    <script>
+        function deleteExpense(expenseId) {
+            fetch("/delete-expense", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                     "X-CSRFToken": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ expenseId: expenseId }),
+            }).then(() => window.location.reload());
+        }
+    </script>
+</form>
 {% endblock %}

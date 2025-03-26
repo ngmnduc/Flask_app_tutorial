@@ -1,15 +1,20 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 from os import path
 from flask_login import LoginManager
+from flask_migrate import Migrate
 db = SQLAlchemy()
+
 DB_NAME = "database.db"
 
 
 def create_app():
     app =Flask(__name__)
     app.config['SECRET_KEY'] = 'skibidi dosp dop'
+    csrf = CSRFProtect(app)
     app.config['SQLALCHEMY_DATABASE_URI'] =f'sqlite:///{DB_NAME}'
+    migrate = Migrate(app, db)
     db.init_app(app)
 
 
